@@ -9,7 +9,7 @@ public class Result<T> {
     private boolean success;
     private T data;
     private String message;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)//pretending appearing errorCode field in success responses
     private String errorCode;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer statusCode;
@@ -36,12 +36,12 @@ public class Result<T> {
         return new Result<>(true, null, message);
     }
 
-    public static Result<?> failure(BaseException ex) {
-        return new Result<>(false, null, ex.getMessage(), ex.getErrorCode(), ex.getStatusCode());
+    public static Result<?> failure(BaseException exception) {
+        return new Result<>(false, null, exception.getMessage(), exception.getErrorCode(), exception.getStatusCode());
     }
 
-    public static <T> Result<T> failure(T data, BaseException ex) {
-        return new Result<>(false, data, ex.getMessage(), ex.getErrorCode(), ex.getStatusCode());
+    public static <T> Result<T> failure(T data, BaseException exception) {
+        return new Result<>(false, data, exception.getMessage(), exception.getErrorCode(), exception.getStatusCode());
     }
 
 }

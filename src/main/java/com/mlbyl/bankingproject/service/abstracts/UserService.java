@@ -14,7 +14,7 @@ public interface UserService {
 
     UserResponse register(UserRegisterRequest request);
 
-    UserResponse update(UserUpdateRequest request);
+    UserResponse update(UserUpdateRequest request,UUID id);
 
     void deleteById(UUID id);
 }
