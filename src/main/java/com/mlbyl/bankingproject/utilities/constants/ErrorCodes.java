@@ -4,5 +4,6 @@ public enum ErrorCodes {
     USER,
     DB,
     VALIDATION,
-    SERVER
+    SERVER,
+    AUTH
 }

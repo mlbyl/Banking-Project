@@ -5,7 +5,8 @@ public enum SuccessMessages {
     ALL_USERS_RETRIEVED_SUCCESSFULLY("All users retrieved successfully"),
     USER_CREATED_SUCCESSFULLY("User created successfully"),
     USER_DELETED_SUCCESSFULLY("User deleted successfully"),
-    USER_UPDATED_SUCCESSFULLY("User successfully updated");
+    USER_UPDATED_SUCCESSFULLY("User successfully updated"),
+    USER_LOGINED_SUCCESSFULLY("User logined successfully");
 
     private final String message;
 
