@@ -1,8 +1,7 @@
 package com.mlbyl.bankingproject.dto.User_Dto.response;
 
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
-import com.mlbyl.bankingproject.entity.Account;
-import com.mlbyl.bankingproject.entity.enums.AccountStatus;
+import com.mlbyl.bankingproject.entity.enums.UserStatus;
 import com.mlbyl.bankingproject.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +22,7 @@ public class UserResponse {
     private String email;
     private LocalDate dateOfBirth;
     private Role role;
-    private AccountStatus accountStatus;
+    private UserStatus userStatus;
     private Integer phoneNumber;
     private LocalDateTime lastLogin;
     private List<AccountResponse> accounts;

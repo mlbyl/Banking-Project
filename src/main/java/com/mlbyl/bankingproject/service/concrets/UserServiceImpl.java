@@ -4,7 +4,7 @@ import com.mlbyl.bankingproject.dto.User_Dto.request.UserRegisterRequest;
 import com.mlbyl.bankingproject.dto.User_Dto.request.UserUpdateRequest;
 import com.mlbyl.bankingproject.dto.User_Dto.response.UserResponse;
 import com.mlbyl.bankingproject.entity.User;
-import com.mlbyl.bankingproject.entity.enums.AccountStatus;
+import com.mlbyl.bankingproject.entity.enums.UserStatus;
 import com.mlbyl.bankingproject.entity.enums.Role;
 import com.mlbyl.bankingproject.exception.BusinessException;
 import com.mlbyl.bankingproject.exception.NotFoundException;
@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setRole(Role.ROLE_USER);
-        user.setAccountStatus(AccountStatus.INACTIVE);
+        user.setUserStatus(UserStatus.INACTIVE);
         return UserMapper.toResponse(userRepository.save(user));
     }
 
@@ -62,6 +63,28 @@ public class UserServiceImpl implements UserService {
         }
         User updatedUser = UserMapper.updateEntity(request, existsUser);
         User savedUser = userRepository.save(updatedUser);
+        return UserMapper.toResponse(savedUser);
+    }
+
+    @Override
+    public UserResponse updateLastLogin(UUID userId, LocalDateTime lastLogin) {
+        User existUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND_WITH_ID.format(userId),
+                        ErrorCodes.USER.name()));
+
+        existUser.setLastLogin(lastLogin);
+        User savedUser = userRepository.save(existUser);
+        return UserMapper.toResponse(savedUser);
+    }
+
+    @Override
+    public UserResponse activateUser(UUID userId) {
+        User existUser = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessages.USER_NOT_FOUND_WITH_ID.format(userId),
+                        ErrorCodes.USER.name()));
+
+        existUser.setUserStatus(UserStatus.ACTIVE);
+        User savedUser = userRepository.save(existUser);
         return UserMapper.toResponse(savedUser);
     }
 

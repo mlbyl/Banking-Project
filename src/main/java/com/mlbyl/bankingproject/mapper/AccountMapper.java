@@ -1,7 +1,12 @@
 package com.mlbyl.bankingproject.mapper;
 
+import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
+import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
+import com.mlbyl.bankingproject.dto.User_Dto.response.UserInAccountResponse;
 import com.mlbyl.bankingproject.entity.Account;
+import com.mlbyl.bankingproject.entity.User;
+import com.mlbyl.bankingproject.utilities.masker.MaskUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +16,10 @@ public class AccountMapper {
     public static AccountResponse toResponse(Account account) {
         return new AccountResponse(
                 account.getId(),
+                MaskUtil.formattedIban(account.getIBAN()),
+                account.getAccountType(),
+                account.getAccountStatus(),
+                account.getCurrency(),
                 UserMapper.toUserInAccountResponse(account.getUser())
         );
     }
@@ -20,5 +29,18 @@ public class AccountMapper {
         return accounts.stream().map(account -> {
             return toResponse(account);
         }).collect(Collectors.toList());
+    }
+
+    public static Account toEntity(AccountCreateRequest req, User user) {
+        return Account.builder()
+                .currency(req.getCurrency())
+                .accountType(req.getAccountType())
+                .user(user)
+                .build();
+    }
+
+    public static Account updateEntity(AccountUpdateRequest req, Account account) {
+        account.setCurrency(req.getCurrency());
+        return account;
     }
 }

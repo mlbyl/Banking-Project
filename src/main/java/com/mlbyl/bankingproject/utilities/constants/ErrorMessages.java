@@ -13,6 +13,12 @@ public enum ErrorMessages {
 
     EMAIL_ALREADY_EXISTS("Email already exists: "),
 
+    USER_NOT_ACTIVE("User not active"),
+
+
+    ACCOUNTS_NOT_FOUND_WITH_USERID("Accounts not found with user id: "),
+    ACCOUNT_NOT_FOUND_WITH_ACCOUNTID("Account not found with account id: "),
+
 
     DATABASE_ERROR_OCCURED("Database error occured"),
     VALIDATION_ERROR_OCCURED("Validation error occured");

@@ -1,12 +1,9 @@
 package com.mlbyl.bankingproject.entity;
 
-import com.mlbyl.bankingproject.entity.enums.AccountStatus;
+import com.mlbyl.bankingproject.entity.enums.UserStatus;
 import com.mlbyl.bankingproject.entity.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,7 +14,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -45,7 +43,7 @@ public class User {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus;
+    private UserStatus userStatus;
 
     @Column(unique = true, nullable = false, name = "phone_number")
     private Integer phoneNumber;
@@ -61,7 +59,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Account> accounts;
 
 }

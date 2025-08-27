@@ -42,7 +42,7 @@ public class UserMapper {
                 user.getEmail(),
                 user.getDateOfBirth(),
                 user.getRole(),
-                user.getAccountStatus(),
+                user.getUserStatus(),
                 user.getPhoneNumber(),
                 user.getLastLogin(),
                 AccountMapper.toResponse(user.getAccounts())
@@ -65,7 +65,7 @@ public class UserMapper {
                 user.getEmail(),
                 user.getDateOfBirth(),
                 user.getRole(),
-                user.getAccountStatus()
+                user.getUserStatus()
         );
     }
 }
