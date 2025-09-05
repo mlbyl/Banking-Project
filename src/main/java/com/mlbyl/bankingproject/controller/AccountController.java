@@ -1,10 +1,13 @@
 package com.mlbyl.bankingproject.controller;
 
 
+import com.mlbyl.bankingproject.controller.payload.AccountPayload;
+import com.mlbyl.bankingproject.controller.payload.AccountResolver;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
 import com.mlbyl.bankingproject.security.jwt.JwtService;
+import com.mlbyl.bankingproject.service.AccountsSearchService;
 import com.mlbyl.bankingproject.service.abstracts.AccountService;
 import com.mlbyl.bankingproject.utilities.constants.SuccessMessages;
 import com.mlbyl.bankingproject.utilities.results.Result;
@@ -23,23 +26,28 @@ import java.util.UUID;
 public class AccountController {
     private final AccountService accountService;
     private final JwtService jwtService;
+    private final AccountsSearchService accountsSearch;
+    private final AccountResolver dtoGenerator;
+    private final ApiSecurityService securityStuff;
 
     @GetMapping()
-    public ResponseEntity<Result<List<AccountResponse>>> getAllAccountsByUser(
+    public Result<List<AccountPayload>> getAllAccountsByUser(
             @RequestHeader("Authorization") String authHeader) {
-        UUID userId = jwtService.extractUserId(authHeader.substring(7));
+        var user = securityStuff.checkSomeStuff(authHeader);
+        var accounts = accountsSearch.getAllAccountsByUser(user.getId());
+        var dto = dtoGenerator.resolveAccountsList(accounts);
 
-        return ResponseEntity.ok(Result.success(accountService.getAllAccountsByUser(userId),
-                SuccessMessages.ALL_USER_ACCOUNTS_RETRIEVED_SUCCESSFULLY.getMessage()));
+        return Result.success(dto, SuccessMessages.ALL_USER_ACCOUNTS_RETRIEVED_SUCCESSFULLY.getMessage());
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<Result<AccountResponse>> getAccountById(@PathVariable Long accountId,
+    public Result<AccountPayload> getAccountById(@PathVariable long accountId,
                                                                   @RequestHeader("Authorization") String authHeader) {
-        UUID userId = jwtService.extractUserId(authHeader.substring(7));
+        var user = securityStuff.checkSomeStuff(authHeader);
+        var validatedAccountId = accountsSearch.getAccountById(accountId, user.getId());
+        var dto = dtoGenerator.resolveAccount(validatedAccountId);
 
-        return ResponseEntity.ok(Result.success(accountService.getAccountById(accountId, userId),
-                SuccessMessages.ACCOUNT_RETRIEVED_SUCCESSFULLY.getMessage()));
+        return Result.success(dto, SuccessMessages.ACCOUNT_RETRIEVED_SUCCESSFULLY.getMessage());
     }
 
     @PostMapping()
