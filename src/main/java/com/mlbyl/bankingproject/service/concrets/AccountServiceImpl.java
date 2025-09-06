@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 
 @Service
@@ -33,37 +32,33 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public List<AccountResponse> getAllAccountsByUser(UUID userId) {
-        checkUserActive(getUser(userId));
-        List<Account> accounts = accountRepository.findByUserId(userId);
+    public List<Account> getAllAccountsByUser(User user) {
+        checkUserActive(user);
+        List<Account> accounts = accountRepository.findByUserId(user.getId());
 
         if (accounts.isEmpty()) {
             throw new NotFoundException(
-                    ErrorMessages.ACCOUNTS_NOT_FOUND_WITH_USERID.format(userId),
+                    ErrorMessages.ACCOUNTS_NOT_FOUND_WITH_USERID.format(user.getId()),
                     ErrorCodes.ACCOUNT.name());
         }
 
-        return AccountMapper.toResponse(accounts);
+        return accounts;
     }
 
     @Override
-    public AccountResponse getAccountById(Long accountId, UUID userId) {
-        userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException(ErrorMessages.USER_NOT_FOUND_WITH_ID.format(userId),
-                        ErrorCodes.USER.name()));
-
+    public Account getAccountById(Long accountId, User user) {
         Account account = accountRepository.findById(accountId).orElseThrow(
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
                         ErrorCodes.ACCOUNT.name()));
 
-        return AccountMapper.toResponse(account);
+        return account;
     }
 
     @Override
-    public AccountResponse create(AccountCreateRequest request, UUID userId) {
-        checkUserActive(getUser(userId));
+    public Account create(AccountCreateRequest request, User user) {
+        checkUserActive(user);
 
-        Account createdAccount = AccountMapper.toEntity(request, getUser(userId));
+        Account createdAccount = AccountMapper.toEntity(request, user);
 
         //TODO Need to add verifcation to activate account status
         createdAccount.setAccountStatus(AccountStatus.INACTIVE);
@@ -72,16 +67,16 @@ public class AccountServiceImpl implements AccountService {
         createdAccount.setBalance(BigDecimal.ZERO);
 
         //TODO Need to change bank code from developement enviroment
-        createdAccount.setIBAN(AccountUtils.generateAccontIBAN("87654321"));
+        createdAccount.setIBAN(AccountUtils.generateAccountIBAN("87654321", createdAccount.getAccountNumber()));
 
         Account savedAccount = accountRepository.save(createdAccount);
 
-        return AccountMapper.toResponse(savedAccount);
+        return savedAccount;
     }
 
     @Override
-    public AccountResponse update(AccountUpdateRequest request, Long accountId, UUID userId) {
-        checkUserActive(getUser(userId));
+    public Account update(AccountUpdateRequest request, Long accountId, User user) {
+        checkUserActive(user);
 
         Account account = accountRepository.findById(accountId).orElseThrow(
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
@@ -90,12 +85,12 @@ public class AccountServiceImpl implements AccountService {
         Account updatedAccount = AccountMapper.updateEntity(request, account);
         Account savedAccount = accountRepository.save(updatedAccount);
 
-        return AccountMapper.toResponse(savedAccount);
+        return savedAccount;
     }
 
     @Override
-    public void deleteById(Long accountId, UUID userId) {
-        checkUserActive(getUser(userId));
+    public void deleteById(Long accountId, User user) {
+        checkUserActive(user);
 
         Account account = accountRepository.findById(accountId).orElseThrow(
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
@@ -111,13 +106,6 @@ public class AccountServiceImpl implements AccountService {
                     ErrorCodes.USER.name(),
                     HttpStatus.FORBIDDEN.value());
         }
-    }
-
-    private User getUser(UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException(ErrorMessages.USER_NOT_FOUND_WITH_ID.format(userId),
-                        ErrorCodes.USER.name()));
-        return user;
     }
 
 

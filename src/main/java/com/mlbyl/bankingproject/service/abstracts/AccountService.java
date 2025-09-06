@@ -3,18 +3,20 @@ package com.mlbyl.bankingproject.service.abstracts;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
+import com.mlbyl.bankingproject.entity.Account;
+import com.mlbyl.bankingproject.entity.User;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface AccountService {
-    List<AccountResponse> getAllAccountsByUser(UUID userId);
+    List<Account> getAllAccountsByUser(User user);
 
-    AccountResponse getAccountById(Long accountId, UUID userId);
+    Account getAccountById(Long accountId, User user);
 
-    AccountResponse create(AccountCreateRequest request, UUID userId);
+    Account create(AccountCreateRequest request, User user);
 
-    AccountResponse update(AccountUpdateRequest request, Long accountId, UUID userId);
+    Account update(AccountUpdateRequest request, Long accountId, User user);
 
-    void deleteById(Long accountId, UUID userId);
+    void deleteById(Long accountId, User user);
 }

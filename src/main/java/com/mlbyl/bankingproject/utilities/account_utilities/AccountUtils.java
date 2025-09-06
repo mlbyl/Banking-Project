@@ -5,8 +5,7 @@ public class AccountUtils {
         return String.valueOf((long) (Math.random() * 100000000l));
     }
 
-    public static String generateAccontIBAN(String bankCode) {
-        String accontNumber = generateAccountNumber();
-        return bankCode + accontNumber;
+    public static String generateAccountIBAN(String bankCode,String accountNumber) {
+        return bankCode + accountNumber;
     }
 }
