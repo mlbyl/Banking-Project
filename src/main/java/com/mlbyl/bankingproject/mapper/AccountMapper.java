@@ -2,6 +2,7 @@ package com.mlbyl.bankingproject.mapper;
 
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
+import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountInTransactionResponse;
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
 import com.mlbyl.bankingproject.dto.User_Dto.response.UserInAccountResponse;
 import com.mlbyl.bankingproject.entity.Account;
@@ -14,14 +15,15 @@ import java.util.stream.Collectors;
 
 public class AccountMapper {
     public static AccountResponse toResponse(Account account) {
-        return new AccountResponse(
-                account.getId(),
-                MaskUtil.formattedIban(account.getIBAN()),
-                account.getAccountType(),
-                account.getAccountStatus(),
-                account.getCurrency(),
-                UserMapper.toUserInAccountResponse(account.getUser())
-        );
+        return AccountResponse.builder()
+                .id(account.getId())
+                .IBAN(MaskUtil.formattedIban(account.getIBAN()))
+                .accountType(account.getAccountType())
+                .accountStatus(account.getAccountStatus())
+                .currency(account.getCurrency())
+                .user(null)
+                .build();
+
     }
 
     public static List<AccountResponse> toResponse(List<Account> accounts) {

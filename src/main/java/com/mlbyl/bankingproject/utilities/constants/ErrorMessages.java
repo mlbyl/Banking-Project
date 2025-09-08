@@ -18,9 +18,25 @@ public enum ErrorMessages {
 
     ACCOUNTS_NOT_FOUND_WITH_USERID("Accounts not found with user id: "),
     ACCOUNT_NOT_FOUND_WITH_ACCOUNTID("Account not found with account id: "),
+    ACCOUNT_NOT_FOUND("Account not found"),
+    ACCOUNT_NOT_ACTIVE("Account not active"),
+
+    ONLY_ACCEPTED_ACCOUNT_TYPES_MAKE_TRANSACTION(
+            "Only Savings and Checking type Accounts can make a transaction"),
+    TRANSACTION_AMOUNT_MUST_BE_GREATER_THAN_ZERO("Amount must be greater than 0"),
+    TRANSACTION_NOT_FOUND_WITH_ID("Transaction not found"),
+    ONLY_COMPLETED_TRANSACTION_CAN_BE_CANCELLED("Only completed transactions can be cancelled"),
+
+
+    ACCESS_DENIED_ACCOUNT_NOT_BELONGS_USER("Account not belongs user"),
+
+    NO_SUFFICIENT_BALANCE("No sufficient balance"),
+
+    CANNOT_TRANSFER_TO_SAME_ACCOUNT("Cannot transfer to same account"),
 
 
     DATABASE_ERROR_OCCURED("Database error occured"),
+
     VALIDATION_ERROR_OCCURED("Validation error occured");
 
 

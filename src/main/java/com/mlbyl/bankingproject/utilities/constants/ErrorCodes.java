@@ -6,5 +6,7 @@ public enum ErrorCodes {
     DB,
     VALIDATION,
     SERVER,
-    AUTH
+    AUTH,
+    ACCESS_DENIED,
+    TRANSACTION,
 }

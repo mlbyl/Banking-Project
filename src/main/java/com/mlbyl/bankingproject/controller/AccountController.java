@@ -1,6 +1,5 @@
 package com.mlbyl.bankingproject.controller;
 
-
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
@@ -46,7 +45,7 @@ public class AccountController {
         User user = apiSecurityService.getAuthenticatedUser(userDetails);
 
         var account = accountService.getAccountById(accountId, user);
-        var response = accountResolver.toResponse(account);
+        var response = accountResolver.toResponseWithBalance(account);
 
         return ResponseEntity.ok(Result.success(response,
                 SuccessMessages.ACCOUNT_RETRIEVED_SUCCESSFULLY.getMessage()));

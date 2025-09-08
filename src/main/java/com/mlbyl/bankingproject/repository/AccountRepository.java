@@ -10,5 +10,5 @@ import java.util.UUID;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByUserId(UUID userId);
 
-    Long id(Long id);
+    Optional<Account> findByIBAN(String iban);
 }

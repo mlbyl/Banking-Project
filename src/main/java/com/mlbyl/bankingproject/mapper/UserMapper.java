@@ -3,6 +3,7 @@ package com.mlbyl.bankingproject.mapper;
 import com.mlbyl.bankingproject.dto.User_Dto.request.UserRegisterRequest;
 import com.mlbyl.bankingproject.dto.User_Dto.request.UserUpdateRequest;
 import com.mlbyl.bankingproject.dto.User_Dto.response.UserInAccountResponse;
+import com.mlbyl.bankingproject.dto.User_Dto.response.UserInTransactionResponse;
 import com.mlbyl.bankingproject.dto.User_Dto.response.UserResponse;
 import com.mlbyl.bankingproject.entity.User;
 
@@ -68,4 +69,6 @@ public class UserMapper {
                 user.getUserStatus()
         );
     }
+
+
 }

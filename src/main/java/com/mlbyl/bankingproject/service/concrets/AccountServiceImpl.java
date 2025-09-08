@@ -2,11 +2,11 @@ package com.mlbyl.bankingproject.service.concrets;
 
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
-import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
 import com.mlbyl.bankingproject.entity.Account;
 import com.mlbyl.bankingproject.entity.User;
 import com.mlbyl.bankingproject.entity.enums.AccountStatus;
 import com.mlbyl.bankingproject.entity.enums.UserStatus;
+import com.mlbyl.bankingproject.exception.AccessDeniedException;
 import com.mlbyl.bankingproject.exception.BusinessException;
 import com.mlbyl.bankingproject.exception.NotFoundException;
 import com.mlbyl.bankingproject.mapper.AccountMapper;
@@ -19,9 +19,11 @@ import com.mlbyl.bankingproject.utilities.constants.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -29,6 +31,7 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+
 
 
     @Override
@@ -51,9 +54,12 @@ public class AccountServiceImpl implements AccountService {
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
                         ErrorCodes.ACCOUNT.name()));
 
+        checkAccountBelongsUser(account, user.getId());
+
         return account;
     }
 
+    @Transactional
     @Override
     public Account create(AccountCreateRequest request, User user) {
         checkUserActive(user);
@@ -74,6 +80,7 @@ public class AccountServiceImpl implements AccountService {
         return savedAccount;
     }
 
+    @Transactional
     @Override
     public Account update(AccountUpdateRequest request, Long accountId, User user) {
         checkUserActive(user);
@@ -82,12 +89,15 @@ public class AccountServiceImpl implements AccountService {
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
                         ErrorCodes.ACCOUNT.name()));
 
+        checkAccountBelongsUser(account, user.getId());
+
         Account updatedAccount = AccountMapper.updateEntity(request, account);
         Account savedAccount = accountRepository.save(updatedAccount);
 
         return savedAccount;
     }
 
+    @Transactional
     @Override
     public void deleteById(Long accountId, User user) {
         checkUserActive(user);
@@ -95,6 +105,8 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElseThrow(
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
                         ErrorCodes.ACCOUNT.name()));
+
+        checkAccountBelongsUser(account, user.getId());
 
         accountRepository.deleteById(accountId);
     }
@@ -104,7 +116,14 @@ public class AccountServiceImpl implements AccountService {
         if (user.getUserStatus() != UserStatus.ACTIVE) {
             throw new BusinessException(ErrorMessages.USER_NOT_ACTIVE.format(user.getId()),
                     ErrorCodes.USER.name(),
-                    HttpStatus.FORBIDDEN.value());
+                    HttpStatus.LOCKED.value());
+        }
+    }
+
+    private void checkAccountBelongsUser(Account account, UUID userId) {
+        if (account.getUser().getId() != userId) {
+            throw new AccessDeniedException(ErrorMessages.ACCESS_DENIED_ACCOUNT_NOT_BELONGS_USER.format(userId),
+                    ErrorCodes.ACCESS_DENIED.name());
         }
     }
 

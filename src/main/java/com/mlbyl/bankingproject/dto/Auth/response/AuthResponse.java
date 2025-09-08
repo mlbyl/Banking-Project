@@ -29,6 +29,6 @@ public class AuthResponse {
     private Integer phoneNumber;
     private LocalDateTime lastLogin;
     private String token;
-    private List<AccountResponse> accounts;
+//    private List<AccountResponse> accounts;
 
 }

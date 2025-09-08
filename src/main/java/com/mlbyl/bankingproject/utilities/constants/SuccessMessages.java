@@ -12,7 +12,11 @@ public enum SuccessMessages {
     ACCOUNT_RETRIEVED_SUCCESSFULLY("Account retrieved successfully"),
     ACCOUNT_CREATED_SUCCESSFULLY("Account created successfull"),
     ACCOUNT_UPDATED_SUCCESSFULLY("Account updated successfully"),
-    ACCOUNT_DELETED_SUCCESSFULLY("Account deleted successfully");
+    ACCOUNT_DELETED_SUCCESSFULLY("Account deleted successfully"),
+
+
+    TRANSACTION_CREATED_SUCCESSFULLY("Transaction created successfully"),
+    ALL_TRANSACTIONS_RETRIEVED_SUCCESSFULLY("All transactions retrieved successfully");
 
     private final String message;
 

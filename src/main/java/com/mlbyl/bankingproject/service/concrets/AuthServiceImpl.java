@@ -5,6 +5,7 @@ import com.mlbyl.bankingproject.dto.Auth.response.AuthResponse;
 import com.mlbyl.bankingproject.entity.User;
 import com.mlbyl.bankingproject.exception.NotFoundException;
 import com.mlbyl.bankingproject.mapper.AccountMapper;
+import com.mlbyl.bankingproject.mapper.resolver.AccountResolver;
 import com.mlbyl.bankingproject.repository.UserRepository;
 import com.mlbyl.bankingproject.security.jwt.JwtService;
 import com.mlbyl.bankingproject.security.model.CustomUserDetails;
@@ -52,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
                 .userStatus(user.getUserStatus())
                 .phoneNumber(user.getPhoneNumber())
                 .dateOfBirth(user.getDateOfBirth())
-                .accounts(AccountMapper.toResponse(user.getAccounts()))
+//                .accounts(AccountMapper.toResponse(user.getAccounts()))
                 .email(user.getEmail())
                 .token(token)
                 .build();

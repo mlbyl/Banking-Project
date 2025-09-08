@@ -26,6 +26,11 @@ public class GlobalExceptionHandler {
         return createResponse(exception, HttpStatus.valueOf(exception.getStatusCode()));
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Result<?>> handleAccessDeniedException(AccessDeniedException exception) {
+        return createResponse(exception, HttpStatus.valueOf(exception.getStatusCode()));
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Result<?>> handleDataIntegrityViolationException(
             DataIntegrityViolationException exception) {

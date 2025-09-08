@@ -15,16 +15,30 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class AccountResolver {
+    public AccountResponse toResponseWithBalance(Account account) {
+        return AccountResponse.builder()
+                .id(account.getId())
+                .IBAN(MaskUtil.formattedIban(account.getIBAN()))
+                .accountType(account.getAccountType())
+                .accountStatus(account.getAccountStatus())
+                .currency(account.getCurrency())
+                .balance(account.getBalance())
+                .user(UserMapper.toUserInAccountResponse(account.getUser()))
+                .build();
+    }
+
     @Transactional(readOnly = true)
     public AccountResponse toResponse(Account account) {
-        return new AccountResponse(
-                account.getId(),
-                MaskUtil.formattedIban(account.getIBAN()),
-                account.getAccountType(),
-                account.getAccountStatus(),
-                account.getCurrency(),
-                UserMapper.toUserInAccountResponse(account.getUser())
-        );
+        return AccountResponse.builder()
+                .id(account.getId())
+                .IBAN(MaskUtil.formattedIban(account.getIBAN()))
+                .accountType(account.getAccountType())
+                .accountStatus(account.getAccountStatus())
+                .currency(account.getCurrency())
+                .balance(null)
+                .user(UserMapper.toUserInAccountResponse(account.getUser()))
+                .build();
+
     }
 
     @Transactional(readOnly = true)

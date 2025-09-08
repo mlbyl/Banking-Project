@@ -4,10 +4,7 @@ import com.mlbyl.bankingproject.entity.enums.AccountStatus;
 import com.mlbyl.bankingproject.entity.enums.AccountType;
 import com.mlbyl.bankingproject.entity.enums.Currency;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -27,7 +24,7 @@ public class Account {
     private Long id;
 
     @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal balance ;
+    private BigDecimal balance;
 
     @Column(nullable = false, name = "account_number", unique = true, length = 8, columnDefinition = "CHAR(8)")
     private String accountNumber;
@@ -58,6 +55,12 @@ public class Account {
     private User user;
 
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Transaction> transaction;
+    @OneToMany(mappedBy = "fromAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Transaction> sentTransactions;
+
+
+    @OneToMany(mappedBy = "toAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Transaction> recievedTransactions;
 }
