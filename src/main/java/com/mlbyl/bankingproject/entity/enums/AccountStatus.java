@@ -1,7 +1,7 @@
 package com.mlbyl.bankingproject.entity.enums;
 
 public enum AccountStatus {
-    ACTIVE,
+    ACTIVE, //value
     INACTIVE,
     SUSPENDED,
     CLOSED,

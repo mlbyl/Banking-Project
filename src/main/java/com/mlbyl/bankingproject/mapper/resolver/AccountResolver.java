@@ -23,7 +23,8 @@ public class AccountResolver {
                 .accountStatus(account.getAccountStatus())
                 .currency(account.getCurrency())
                 .balance(account.getBalance())
-                .user(UserMapper.toUserInAccountResponse(account.getUser()))
+                .lastActivityDate(account.getLastActivityDate())
+                .userId(account.getUser().getId())
                 .build();
     }
 
@@ -36,7 +37,8 @@ public class AccountResolver {
                 .accountStatus(account.getAccountStatus())
                 .currency(account.getCurrency())
                 .balance(null)
-                .user(UserMapper.toUserInAccountResponse(account.getUser()))
+                .lastActivityDate(account.getLastActivityDate())
+                .userId(account.getUser().getId())
                 .build();
 
     }

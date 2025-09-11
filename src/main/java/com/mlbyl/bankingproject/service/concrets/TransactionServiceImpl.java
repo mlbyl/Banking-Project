@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,6 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction = transactionRepository.save(transaction);
 
         account.setBalance(account.getBalance().add(request.getAmount()));
+        account.setLastActivityDate(LocalDateTime.now());
         accountRepository.save(account);
 
         transaction.setTransactionStatus(TransactionStatus.COMPLETED);
@@ -105,6 +107,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
         account.setBalance(account.getBalance().subtract(request.getAmount()));
+        account.setLastActivityDate(LocalDateTime.now());
         accountRepository.save(account);
 
         transaction.setTransactionStatus(TransactionStatus.COMPLETED);
@@ -167,6 +170,9 @@ public class TransactionServiceImpl implements TransactionService {
         senderAccount.setBalance(senderAccount.getBalance().subtract(request.getAmount()));
         recieverAccount.setBalance(recieverAccount.getBalance().add(request.getAmount()));
 
+        senderAccount.setLastActivityDate(LocalDateTime.now());
+        recieverAccount.setLastActivityDate(LocalDateTime.now());
+
         accountRepository.save(senderAccount);
         accountRepository.save(recieverAccount);
 
@@ -208,6 +214,9 @@ public class TransactionServiceImpl implements TransactionService {
         senderAccount.setBalance(senderAccount.getBalance().add(transaction.getAmount()));
 
         transaction.setTransactionStatus(TransactionStatus.CANCELLED);
+
+        recieverAccount.setLastActivityDate(LocalDateTime.now());
+        senderAccount.setLastActivityDate(LocalDateTime.now());
 
         accountRepository.save(senderAccount);
         accountRepository.save(recieverAccount);

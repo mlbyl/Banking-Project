@@ -13,7 +13,9 @@ import com.mlbyl.bankingproject.service.abstracts.TransactionService;
 import com.mlbyl.bankingproject.utilities.constants.SuccessMessages;
 import com.mlbyl.bankingproject.utilities.results.Result;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +26,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/transaction")
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TransactionController {
-    private final TransactionService transactionService;
-    private final ApiSecurityService apiSecurityService;
-    private final TransactionResolver transactionResolver;
+    TransactionService transactionService;
+    ApiSecurityService apiSecurityService;
+    TransactionResolver transactionResolver;
 
 
     @PostMapping("/withdraw/{accountId}")

@@ -28,7 +28,9 @@ public enum ErrorMessages {
     ONLY_COMPLETED_TRANSACTION_CAN_BE_CANCELLED("Only completed transactions can be cancelled"),
 
 
-    ACCESS_DENIED_ACCOUNT_NOT_BELONGS_USER("Account not belongs user"),
+    ACCESS_DENIED_ACCOUNT_NOT_BELONGS_USER("Access denied Account not belongs user: "),
+    ACCESS_DENIED_ACCOUNT_PERMISSION_NOT_ABLE_TO_DO_OPERATION(
+            "Access denied Account permission has not able to do this operation: "),
 
     NO_SUFFICIENT_BALANCE("No sufficient balance"),
 

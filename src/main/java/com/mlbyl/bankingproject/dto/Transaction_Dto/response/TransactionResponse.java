@@ -1,7 +1,5 @@
 package com.mlbyl.bankingproject.dto.Transaction_Dto.response;
 
-import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountInTransactionResponse;
-import com.mlbyl.bankingproject.dto.User_Dto.response.UserInTransactionResponse;
 import com.mlbyl.bankingproject.entity.enums.TransactionStatus;
 import com.mlbyl.bankingproject.entity.enums.TransactionType;
 import lombok.AllArgsConstructor;
@@ -24,7 +22,4 @@ public class TransactionResponse {
     private LocalDateTime createdAt;
     private Long senderAccountId;
     private Long recieverAccountId;
-
-
-
 }

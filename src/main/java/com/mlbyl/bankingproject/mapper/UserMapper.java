@@ -2,8 +2,6 @@ package com.mlbyl.bankingproject.mapper;
 
 import com.mlbyl.bankingproject.dto.User_Dto.request.UserRegisterRequest;
 import com.mlbyl.bankingproject.dto.User_Dto.request.UserUpdateRequest;
-import com.mlbyl.bankingproject.dto.User_Dto.response.UserInAccountResponse;
-import com.mlbyl.bankingproject.dto.User_Dto.response.UserInTransactionResponse;
 import com.mlbyl.bankingproject.dto.User_Dto.response.UserResponse;
 import com.mlbyl.bankingproject.entity.User;
 
@@ -58,17 +56,6 @@ public class UserMapper {
         }).collect(Collectors.toList());
     }
 
-    public static UserInAccountResponse toUserInAccountResponse(User user) {
-        return new UserInAccountResponse(
-                user.getId(),
-                user.getName(),
-                user.getSurname(),
-                user.getEmail(),
-                user.getDateOfBirth(),
-                user.getRole(),
-                user.getUserStatus()
-        );
-    }
 
 
 }

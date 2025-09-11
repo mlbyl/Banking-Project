@@ -5,6 +5,7 @@ import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
 import com.mlbyl.bankingproject.entity.Account;
 import com.mlbyl.bankingproject.entity.User;
 import com.mlbyl.bankingproject.entity.enums.AccountStatus;
+import com.mlbyl.bankingproject.entity.enums.OperationType;
 import com.mlbyl.bankingproject.entity.enums.UserStatus;
 import com.mlbyl.bankingproject.exception.AccessDeniedException;
 import com.mlbyl.bankingproject.exception.BusinessException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +33,6 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
-
 
 
     @Override
@@ -67,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
         Account createdAccount = AccountMapper.toEntity(request, user);
 
         //TODO Need to add verifcation to activate account status
-        createdAccount.setAccountStatus(AccountStatus.INACTIVE);
+        createdAccount.setAccountStatus(AccountStatus.PENDING_APPROVAL);
 
         createdAccount.setAccountNumber(AccountUtils.generateAccountNumber());
         createdAccount.setBalance(BigDecimal.ZERO);
@@ -89,9 +90,12 @@ public class AccountServiceImpl implements AccountService {
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
                         ErrorCodes.ACCOUNT.name()));
 
+        isAccountAbleToOperate(account, OperationType.UPDATE);
         checkAccountBelongsUser(account, user.getId());
 
         Account updatedAccount = AccountMapper.updateEntity(request, account);
+        updatedAccount.setLastActivityDate(LocalDateTime.now());
+
         Account savedAccount = accountRepository.save(updatedAccount);
 
         return savedAccount;
@@ -106,9 +110,12 @@ public class AccountServiceImpl implements AccountService {
                 () -> new NotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND_WITH_ACCOUNTID.format(accountId),
                         ErrorCodes.ACCOUNT.name()));
 
+        isAccountAbleToOperate(account, OperationType.DELETE);
         checkAccountBelongsUser(account, user.getId());
 
-        accountRepository.deleteById(accountId);
+        account.setLastActivityDate(LocalDateTime.now());
+        account.setAccountStatus(AccountStatus.CLOSED);
+//        accountRepository.deleteById(accountId);
     }
 
 
@@ -117,6 +124,26 @@ public class AccountServiceImpl implements AccountService {
             throw new BusinessException(ErrorMessages.USER_NOT_ACTIVE.format(user.getId()),
                     ErrorCodes.USER.name(),
                     HttpStatus.LOCKED.value());
+        }
+    }
+
+    private void isAccountAbleToOperate(Account account, OperationType operationType) {
+        switch (operationType) {
+            case UPDATE:
+                if (account.getAccountStatus() != AccountStatus.ACTIVE) {
+                    throw new AccessDeniedException(
+                            ErrorMessages.ACCESS_DENIED_ACCOUNT_PERMISSION_NOT_ABLE_TO_DO_OPERATION.format(
+                                    account.getId()),
+                            ErrorCodes.ACCESS_DENIED.name());
+                }
+                break;
+            case DELETE:
+                if (account.getAccountStatus() != AccountStatus.ACTIVE && account.getAccountStatus() != AccountStatus.INACTIVE) {
+                    throw new AccessDeniedException(
+                            ErrorMessages.ACCESS_DENIED_ACCOUNT_PERMISSION_NOT_ABLE_TO_DO_OPERATION.format(
+                                    account.getId()), ErrorCodes.ACCESS_DENIED.name());
+                }
+                break;
         }
     }
 

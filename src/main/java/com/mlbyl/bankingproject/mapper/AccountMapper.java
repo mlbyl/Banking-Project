@@ -2,9 +2,7 @@ package com.mlbyl.bankingproject.mapper;
 
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountCreateRequest;
 import com.mlbyl.bankingproject.dto.Account_Dto.request.AccountUpdateRequest;
-import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountInTransactionResponse;
 import com.mlbyl.bankingproject.dto.Account_Dto.response.AccountResponse;
-import com.mlbyl.bankingproject.dto.User_Dto.response.UserInAccountResponse;
 import com.mlbyl.bankingproject.entity.Account;
 import com.mlbyl.bankingproject.entity.User;
 import com.mlbyl.bankingproject.utilities.masker.MaskUtil;
@@ -21,7 +19,8 @@ public class AccountMapper {
                 .accountType(account.getAccountType())
                 .accountStatus(account.getAccountStatus())
                 .currency(account.getCurrency())
-                .user(null)
+                .lastActivityDate(account.getLastActivityDate())
+                .userId(account.getUser().getId())
                 .build();
 
     }

@@ -1,6 +1,5 @@
 package com.mlbyl.bankingproject.dto.Account_Dto.response;
 
-import com.mlbyl.bankingproject.dto.User_Dto.response.UserInAccountResponse;
 import com.mlbyl.bankingproject.entity.enums.AccountStatus;
 import com.mlbyl.bankingproject.entity.enums.AccountType;
 import com.mlbyl.bankingproject.entity.enums.Currency;
@@ -10,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +23,7 @@ public class AccountResponse {
     private AccountStatus accountStatus;
     private Currency currency;
     private BigDecimal balance;
-    private UserInAccountResponse user;
+    private LocalDateTime lastActivityDate;
+    private UUID userId;
+//    private UserInAccountResponse user;
 }

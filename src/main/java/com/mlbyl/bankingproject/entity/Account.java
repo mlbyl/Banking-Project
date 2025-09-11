@@ -39,7 +39,7 @@ public class Account {
     private AccountType accountType;
 
     @Enumerated(EnumType.STRING)
-    private Currency currency;
+    private Currency currency; //entity  - merkezi bank
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
@@ -49,6 +49,8 @@ public class Account {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(name = "last_activity_date", nullable = true, updatable = true)
+    private LocalDateTime lastActivityDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
