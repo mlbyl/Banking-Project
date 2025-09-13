@@ -3,8 +3,10 @@
 
 ## Project Overview
 
-Banking-App (in development) is a simple banking application built with Java (SPRING BOOT).  
+Banking-App is a simple banking application built with Java (SPRING BOOT).  
 The project simulates basic banking operations for learning and testing purposes.
+
+>Note: Project is built during the learning process, so the code structure of domains evolves differently.
 
 ## Features
 
