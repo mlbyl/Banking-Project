@@ -1,5 +1,158 @@
 # Banking-App
 
+# Banking Project – Core Architecture Diagram
+
+```mermaid
+flowchart TD
+%% External Client
+Client["Client<br/>(Browser/Mobile/API)"]:::external
+
+%% Security Layer
+subgraph "Security Layer"
+direction TB
+JwtFilter["JwtAuthenticationFilter"]:::security
+SecurityConfig["SecurityConfig"]:::security
+AuthConfig["AuthConfig"]:::security
+JwtService["JwtService"]:::security
+CustomUserDetailsService["CustomUserDetailsService"]:::security
+CustomUserDetails["CustomUserDetails"]:::security
+end
+
+%% API Layer
+subgraph "API Layer"
+direction TB
+AuthController["AuthController"]:::controller
+UserController["UserController"]:::controller
+AccountController["AccountController"]:::controller
+TransactionController["TransactionController"]:::controller
+end
+
+%% Service Layer
+subgraph "Service Layer"
+direction TB
+AuthServiceInterface["AuthService (Interface)"]:::service
+AuthServiceImpl["AuthServiceImpl"]:::service
+UserServiceInterface["UserService (Interface)"]:::service
+UserServiceImpl["UserServiceImpl"]:::service
+AccountServiceInterface["AccountService (Interface)"]:::service
+AccountServiceImpl["AccountServiceImpl"]:::service
+TransactionServiceInterface["TransactionService (Interface)"]:::service
+TransactionServiceImpl["TransactionServiceImpl"]:::service
+ApiSecurityService["ApiSecurityService"]:::service
+end
+
+%% Mapper Layer
+subgraph "Mapper Layer"
+direction TB
+AccountMapper["AccountMapper"]:::mapper
+UserMapper["UserMapper"]:::mapper
+TransactionMapper["TransactionMapper"]:::mapper
+AccountResolver["AccountResolver"]:::mapper
+TransactionResolver["TransactionResolver"]:::mapper
+end
+
+%% Persistence Layer
+subgraph "Persistence Layer"
+direction TB
+UserRepository["UserRepository"]:::repository
+AccountRepository["AccountRepository"]:::repository
+TransactionRepository["TransactionRepository"]:::repository
+end
+
+%% Database
+Database["PostgreSQL"]:::database
+subgraph "Entities"
+direction TB
+UserEntity["User Entity"]:::entity
+AccountEntity["Account Entity"]:::entity
+TransactionEntity["Transaction Entity"]:::entity
+end
+
+%% Flows
+Client -->|"HTTP Request with JWT"| JwtFilter
+JwtFilter -->|"Authenticate/Authorize"| AuthController
+JwtFilter -->|"Authenticate/Authorize"| UserController
+JwtFilter -->|"Authenticate/Authorize"| AccountController
+JwtFilter -->|"Authenticate/Authorize"| TransactionController
+
+AuthController -->|"calls AuthService"| AuthServiceInterface
+AuthServiceInterface -->|"implemented by"| AuthServiceImpl
+AuthServiceImpl -->|"uses JwtService"| JwtService
+AuthServiceImpl -->|"uses CustomUserDetailsService"| CustomUserDetailsService
+AuthServiceImpl -->|"uses ApiSecurityService"| ApiSecurityService
+
+UserController -->|"calls UserService"| UserServiceInterface
+UserServiceInterface -->|"implemented by"| UserServiceImpl
+
+AccountController -->|"calls AccountService"| AccountServiceInterface
+AccountServiceInterface -->|"implemented by"| AccountServiceImpl
+
+TransactionController -->|"calls TransactionService"| TransactionServiceInterface
+TransactionServiceInterface -->|"implemented by"| TransactionServiceImpl
+
+UserServiceImpl -->|"maps DTO↔Entity"| UserMapper
+AccountServiceImpl -->|"maps DTO↔Entity"| AccountMapper
+TransactionServiceImpl -->|"maps DTO↔Entity"| TransactionMapper
+
+AccountMapper -->|"resolves relations"| AccountResolver
+TransactionMapper -->|"resolves relations"| TransactionResolver
+
+UserServiceImpl --> UserRepository
+AccountServiceImpl --> AccountRepository
+TransactionServiceImpl --> TransactionRepository
+
+UserRepository -->|"CRUD"| Database
+AccountRepository -->|"CRUD"| Database
+TransactionRepository -->|"CRUD"| Database
+
+Database --> UserEntity
+Database --> AccountEntity
+Database --> TransactionEntity
+
+%% Click Events (may not work on GitHub, use local HTML for full interaction)
+click JwtFilter "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/config/JwtAuthenticationFilter.java"
+click SecurityConfig "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/config/SecurityConfig.java"
+click AuthConfig "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/config/AuthConfig.java"
+click JwtService "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/security/jwt/JwtService.java"
+click CustomUserDetailsService "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/security/service/CustomUserDetailsService.java"
+click CustomUserDetails "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/security/model/CustomUserDetails.java"
+click AuthController "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/controller/AuthController.java"
+click UserController "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/controller/UserController.java"
+click AccountController "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/controller/AccountController.java"
+click TransactionController "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/controller/TransactionController.java"
+click AuthServiceInterface "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/abstracts/AuthService.java"
+click AuthServiceImpl "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/concrets/AuthServiceImpl.java"
+click UserServiceInterface "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/abstracts/UserService.java"
+click UserServiceImpl "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/concrets/UserServiceImpl.java"
+click AccountServiceInterface "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/abstracts/AccountService.java"
+click AccountServiceImpl "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/concrets/AccountServiceImpl.java"
+click TransactionServiceInterface "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/abstracts/TransactionService.java"
+click TransactionServiceImpl "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/concrets/TransactionServiceImpl.java"
+click ApiSecurityService "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/service/ApiSecurityService.java"
+click AccountMapper "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/mapper/AccountMapper.java"
+click UserMapper "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/mapper/UserMapper.java"
+click TransactionMapper "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/mapper/TransactionMapper.java"
+click AccountResolver "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/mapper/resolver/AccountResolver.java"
+click TransactionResolver "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/mapper/resolver/TransactionResolver.java"
+click UserRepository "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/repository/UserRepository.java"
+click AccountRepository "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/repository/AccountRepository.java"
+click TransactionRepository "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/repository/TransactionRepository.java"
+click UserEntity "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/entity/User.java"
+click AccountEntity "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/entity/Account.java"
+click TransactionEntity "https://github.com/mlbyl/Banking-Project/blob/master/src/main/java/com/mlbyl/bankingproject/entity/Transaction.java"
+
+%% Styles
+classDef external fill:#dddddd,stroke:#888888,color:#333333;
+classDef security fill:#ffdddd,stroke:#cc0000,color:#660000;
+classDef controller fill:#ddeeff,stroke:#0055cc,color:#003366;
+classDef service fill:#ddffdd,stroke:#00aa00,color:#003300;
+classDef mapper fill:#f0ddff,stroke:#aa00cc,color:#330066;
+classDef repository fill:#ffffcc,stroke:#cccc00,color:#666600;
+classDef database fill:#e0f7fa,stroke:#006064,color:#004d40;
+classDef entity fill:#fff0e0,stroke:#cc6600,color:#663300;
+```
+
+
 
 ## Project Overview
 
